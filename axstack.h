@@ -37,7 +37,7 @@ typedef struct AXstackFuncs {
     AXstack *(*copy)(AXstack *s);
     // set capacity to some value thereby calling the destructor on excess items when shrinking. True iff OOM,
     // changing length of stack and calling of destructors is done regardless of fail or not
-    bool (*resize)(AXstack *s, long size);
+    bool (*resize)(AXstack *s, unsigned long size);
     // call destructor if available on item
     AXstack *(*destroyItem)(AXstack *s, void *val);
     // set destructor function (passing NULL will disable destructor)

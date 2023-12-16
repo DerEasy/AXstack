@@ -23,6 +23,7 @@ union Long {
     long s;
 };
 
+static long len(AXstack *s);
 
 static ulong toItemSize(ulong n) {
     return n * sizeof(void *);
@@ -147,7 +148,7 @@ static AXstack *copy(AXstack *s) {
 }
 
 
-static bool resize(AXstack *s, long size) {
+static bool resize(AXstack *s, ulong size) {
     size = MAX(1, size);
 
     if (size < s->len && s->destroy) while (s->len > size) {
