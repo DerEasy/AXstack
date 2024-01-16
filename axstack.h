@@ -8,48 +8,54 @@
 #include <stdbool.h>
 
 // simple and fast array-based stack implementation
-typedef struct AXstack AXstack;
+typedef struct axstack axstack;
 
-typedef struct AXstackFuncs {
+struct axstackFn {
     // create new stack with default capacity
-    AXstack *(*new)(void);
+    axstack *(*new)(void);
     // create new stack with custom capacity
-    AXstack *(*sizedNew)(unsigned long size);
+    axstack *(*sizedNew)(unsigned long size);
     // destroy stack and optionally free all items
-    void (*destroy)(AXstack *s);
+    void (*destroy)(axstack *s);
     // push value on stack; returns true iff OOM
-    bool (*push)(AXstack *s, void *val);
+    bool (*push)(axstack *s, void *val);
     // pop value from stack; returns NULL if stack empty
-    void *(*pop)(AXstack *s);
+    void *(*pop)(axstack *s);
     // peek top of stack without removal; returns NULL if stack empty
-    void *(*top)(AXstack *s);
+    void *(*top)(axstack *s);
     // get length of stack
-    long (*len)(AXstack *s);
+    long (*len)(axstack *s);
     // index stack; 0 top, -1 bottom etc.; returns NULL on index error
-    void *(*at)(AXstack *s, long index);
+    void *(*at)(axstack *s, long index);
     // swap two items; 0 top, -1 bottom etc.; returns true iff index error
-    bool (*swap)(AXstack *s, long index1, long index2);
+    bool (*swap)(axstack *s, long index1, long index2);
     // reverse stack order in-place; returns stack
-    AXstack *(*reverse)(AXstack *s);
+    axstack *(*reverse)(axstack *s);
     // call destructor if any and remove all items
-    AXstack *(*clear)(AXstack *s);
+    axstack *(*clear)(axstack *s);
     // create new shallow copy of stack
-    AXstack *(*copy)(AXstack *s);
+    axstack *(*copy)(axstack *s);
     // set capacity to some value thereby calling the destructor on excess items when shrinking. True iff OOM,
     // changing length of stack and calling of destructors is done regardless of fail or not
-    bool (*resize)(AXstack *s, unsigned long size);
+    bool (*resize)(axstack *s, unsigned long size);
     // call destructor if available on item
-    AXstack *(*destroyItem)(AXstack *s, void *val);
+    axstack *(*destroyItem)(axstack *s, void *val);
     // set destructor function (passing NULL will disable destructor)
-    AXstack *(*setDestructor)(AXstack *v, void (*destroy)(void *));
+    axstack *(*setDestructor)(axstack *v, void (*destroy)(void *));
     // get destructor function
-    void (*(*getDestructor)(AXstack *v))(void *);
+    void (*(*getDestructor)(axstack *v))(void *);
     // get pointer to underlying array; points to bottom of stack
-    void **(*data)(AXstack *s);
+    void **(*data)(axstack *s);
     // get capacity of stack
-    long (*cap)(AXstack *s);
-} AXstackFuncs;
+    long (*cap)(axstack *s);
+};
 
-extern const AXstackFuncs axs;
+#ifdef AXSTACK_NAMESPACE
+#define axs AXSTACK_NAMESPACE
+#endif
+
+extern const struct axstackFn axs;
+
+#undef axs
 
 #endif //AXSTACK_AXSTACK_H
